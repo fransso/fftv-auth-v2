@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080a0d">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://esm.sh; style-src 'self'; connect-src https://nasmymzpaubhzslrultb.supabase.co https://esm.sh; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'self'">
+  <title>FTV Account</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <a class="brand" href="./"><span class="brand-mark">F</span><span class="brand-name">FTV</span></a>
+    <span class="secure-pill">Secure account portal</span>
+  </header>
+
+  <main class="main">
+    <div class="layout">
+      <section class="hero" aria-label="FTV account information">
+        <div class="eyebrow">FTV for Android TV</div>
+        <h1>Your account.<br>Your television.</h1>
+        <p>Create one FTV account and use it to securely connect your television. After registration, contact FTV with the same email address to activate your viewing access.</p>
+        <div class="features">
+          <span class="feature">TV QR sign-in</span>
+          <span class="feature">Private account access</span>
+          <span class="feature">Per-user catalog</span>
+          <span class="feature">Secure playback</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div id="loadingView">
+          <h1>Loading your account…</h1>
+          <p>Checking your secure session.</p>
+        </div>
+
+        <div id="loginView" class="hide">
+          <h1>Sign in</h1>
+          <p>Use the same account you use on your FTV television.</p>
+          <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" inputmode="email" maxlength="254"></div>
+          <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" minlength="8" maxlength="128"></div>
+          <button id="signInButton" class="primary">Sign in</button>
+          <button id="forgotButton" class="text-button" type="button">Forgot password?</button>
+          <button id="showCreateButton" class="ghost" type="button">Create an account instead</button>
+          <div id="loginStatus" class="status"></div>
+        </div>
+
+        <div id="createView" class="hide">
+          <h1>Create your FTV account</h1>
+          <p>After confirming your email, contact FTV and share this exact email address for activation.</p>
+          <div class="field"><label for="displayName">Display name</label><input id="displayName" autocomplete="name" maxlength="50"></div>
+          <div class="field"><label for="createEmail">Email</label><input id="createEmail" type="email" autocomplete="email" inputmode="email" maxlength="254"></div>
+          <div class="field"><label for="createPassword">Password</label><input id="createPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128"></div>
+          <button id="createButton" class="primary">Create account</button>
+          <button id="backToLoginButton" class="ghost" type="button">Back to sign in</button>
+          <div id="createStatus" class="status"></div>
+        </div>
+
+        <div id="forgotView" class="hide">
+          <h1>Reset password</h1>
+          <p>We’ll email you a secure password-reset link.</p>
+          <div class="field"><label for="forgotEmail">Email</label><input id="forgotEmail" type="email" autocomplete="email" inputmode="email" maxlength="254"></div>
+          <button id="sendResetButton" class="primary">Send reset link</button>
+          <button id="forgotBackButton" class="ghost" type="button">Back to sign in</button>
+          <div id="forgotStatus" class="status"></div>
+        </div>
+
+        <div id="accountView" class="hide">
+          <h1>Your FTV account</h1>
+          <p>Your account is ready to be used with the Android TV app.</p>
+          <div class="account-box">
+            <div class="account-label">Signed in as</div>
+            <div id="accountEmail" class="account-email"></div>
+          </div>
+          <div id="accountBadges" class="badge-row"></div>
+          <div id="activationMessage" class="status"></div>
+          <div id="supportBox" class="account-box hide"></div>
+          <button id="refreshStatusButton" class="secondary">Refresh activation status</button>
+          <button id="signOutButton" class="ghost">Sign out</button>
+        </div>
+
+        <div id="confirmedView" class="hide">
+          <div class="success-icon">✓</div>
+          <h1>Email confirmed</h1>
+          <p>Your FTV account is ready. Sign in below, then contact FTV with your email address for activation.</p>
+          <button id="confirmedContinueButton" class="primary">Continue to sign in</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer"><span>FTV account portal</span><span>Never share your password with support.</span></footer>
+</div>
+<script type="module" src="./assets/account.js"></script>
+</body>
+</html>

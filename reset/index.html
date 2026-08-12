@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080a0d">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://esm.sh; style-src 'self'; connect-src https://nasmymzpaubhzslrultb.supabase.co https://esm.sh; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'self'">
+  <title>Reset FTV password</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <main class="center-shell">
+    <div class="consent-mark"><div class="brand-mark">F</div><div class="brand-name">FTV</div></div>
+    <section class="card">
+      <div id="loadingView"><h1>Checking reset link…</h1><p>Preparing your secure password reset.</p></div>
+      <div id="resetView" class="hide">
+        <h1>Choose a new password</h1>
+        <p>Use at least 8 characters. Do not reuse a password from another service.</p>
+        <div class="field"><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128"></div>
+        <div class="field"><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128"></div>
+        <button id="updateButton" class="primary">Update password</button>
+        <div id="resetStatus" class="status"></div>
+      </div>
+      <div id="invalidView" class="hide"><h1>Reset link expired</h1><p>Return to the FTV account page and request a new password-reset email.</p><a href="../"><button class="primary">Return to FTV</button></a></div>
+    </section>
+  </main>
+  <script type="module" src="../assets/reset.js"></script>
+</body>
+</html>
