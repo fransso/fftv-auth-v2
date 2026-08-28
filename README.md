@@ -1,20 +1,20 @@
-# FTV GitHub Pages account + TV OAuth site
+# FTV account + TV OAuth site
 
-Static GitHub Pages frontend for the FTV Android TV application.
+Browser account portal and OAuth 2.1 consent UI for the FTV Android TV application.
 
 ## Production configuration
 
-- Supabase project: `nasmymzpaubhzslrultb`
-- Public OAuth client: `1cf3dba8-e78d-4e3f-bcd0-3ef3ed88a3ca`
-- Expected GitHub Pages base URL: `https://fransso.github.io/fftv-auth-v2`
-- TV OAuth callback stays on Supabase: `https://nasmymzpaubhzslrultb.supabase.co/functions/v1/fftv-device-auth/callback`
+- Production web URL: `https://ftv-auth-frans1997-5983.vercel.app`
+- Supabase project: `shncvisxaoctxunwhcfd`
+- Public OAuth client: `5147e5bf-b019-4bb9-bfbd-5743cd32cb3d`
+- TV OAuth callback: `https://shncvisxaoctxunwhcfd.supabase.co/functions/v1/fftv-device-auth/callback`
 
-Only a Supabase **publishable** key is present in this repository. This is intentional and safe for a browser application. Never place a Supabase secret/service-role key, Xtream username/password, reseller credentials, or database password in this repository.
+Only a Supabase **publishable** key is present in this repository. This is intentional and appropriate for a browser application. Never place a Supabase secret/service-role key, Xtream username/password, reseller credentials, or database password in this repository.
 
 ## Routes
 
-- `/` — account sign-in, sign-up, activation status, reset-request
+- `/` — account sign-in, sign-up, activation status, reset request
 - `/oauth/consent/` — Supabase OAuth 2.1 authorization UI used by TV QR sign-in
 - `/reset/` — password recovery completion page
 
-See `DEPLOYMENT_CHECKLIST.md` for the exact GitHub and Supabase setup.
+The Android app uses one-time OAuth/PKCE QR requests through the `fftv-device-auth` Edge Function. The retired pairing-code functions must not be restored.
