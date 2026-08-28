@@ -1,111 +1,70 @@
-# FTV GitHub Pages deployment checklist
+# FTV production account + TV OAuth deployment checklist
 
-## 1. GitHub repository
+## 1. Canonical source
 
-Recommended repository name: `fftv-auth-v2`.
+Repository: `fransso/fftv-auth-v2`
 
-Upload every file/folder in this ZIP to the repository root, preserving:
+Production web URL:
 
-```
-.nojekyll
-404.html
-config.js
-index.html
-assets/
-oauth/consent/
-reset/
-```
+`https://ftv-auth-frans1997-5983.vercel.app`
 
-## 2. Enable GitHub Pages
+The repository contains only browser-safe public configuration. Never commit service-role keys, database passwords, Xtream credentials, reseller credentials, or signing secrets.
 
-Repository → Settings → Pages → Build and deployment:
+## 2. Production Supabase configuration
 
-- Source: `Deploy from a branch`
-- Branch: `main`
-- Folder: `/(root)`
+Project ref:
 
-Expected live URL:
+`shncvisxaoctxunwhcfd`
 
-`https://fransso.github.io/fftv-auth-v2/`
+Browser Supabase URL:
 
-Verify these three URLs load:
+`https://shncvisxaoctxunwhcfd.supabase.co`
 
-- `https://fransso.github.io/fftv-auth-v2/`
-- `https://fransso.github.io/fftv-auth-v2/oauth/consent/`
-- `https://fransso.github.io/fftv-auth-v2/reset/`
+Public TV OAuth client:
 
-The consent page without an `authorization_id` should show an expired/new-QR message. That is correct.
+`5147e5bf-b019-4bb9-bfbd-5743cd32cb3d`
 
-## 3. Supabase URL Configuration
+TV OAuth callback:
 
-After GitHub Pages is live, in Supabase:
+`https://shncvisxaoctxunwhcfd.supabase.co/functions/v1/fftv-device-auth/callback`
 
-Authentication → URL Configuration
+The callback belongs to the Supabase Edge Function, not to the web host.
 
-Set Site URL to:
+## 3. Required browser routes
 
-`https://fransso.github.io/fftv-auth-v2`
+- `/` — account sign-in/sign-up/activation status
+- `/oauth/consent/` — OAuth authorization consent opened after scanning the TV QR code
+- `/reset/` — password recovery completion
 
-Add Redirect URLs:
+All pages must allow browser connections to `https://shncvisxaoctxunwhcfd.supabase.co` in their Content Security Policy.
 
-`https://fransso.github.io/fftv-auth-v2/`
+## 4. Supabase Authentication
 
-`https://fransso.github.io/fftv-auth-v2/?confirmed=1`
+Authentication → URL Configuration should use the production web host for account confirmation/password-reset redirects.
 
-`https://fransso.github.io/fftv-auth-v2/reset/`
-
-## 4. Supabase OAuth Server
-
-Authentication → OAuth Server
+Authentication → OAuth Server:
 
 - OAuth 2.1 Server: ON
-- Authorization Path: `/oauth/consent/`
+- Authorization UI: production `/oauth/consent/` page (directly or through the existing `ftv-auth` redirect function)
 - Dynamic Client Registration: OFF
+- Public client ID: `5147e5bf-b019-4bb9-bfbd-5743cd32cb3d`
+- Redirect URI: `https://shncvisxaoctxunwhcfd.supabase.co/functions/v1/fftv-device-auth/callback`
+- Public client / token endpoint authentication: none
 
-Keep the existing public TV OAuth client:
+## 5. QR test order
 
-Client ID:
-`1cf3dba8-e78d-4e3f-bcd0-3ef3ed88a3ca`
+1. Open FTV on the television and request QR sign-in.
+2. Scan the newly generated QR code.
+3. Browser should reach `/oauth/consent/?authorization_id=...`.
+4. Sign in using the FTV account.
+5. Choose **Continue to TV**.
+6. Supabase redirects to `fftv-device-auth/callback`.
+7. The TV polls `fftv-device-auth/poll`, receives the one-time authorization code, exchanges it with Supabase, registers the TV, and completes sign-in.
 
-Redirect URI:
-`https://nasmymzpaubhzslrultb.supabase.co/functions/v1/fftv-device-auth/callback`
+Always generate a fresh QR after a failed or expired attempt. OAuth state/PKCE requests are intentionally one-time and short-lived.
 
-Client type: Public
-Token endpoint authentication: `none`
+## 6. Storage/auth health guard
 
-Do not change the Android OAuth callback to GitHub. The callback belongs to the Supabase `fftv-device-auth` function.
+If password sign-in starts returning HTTP 500 or QR callback reports `error creating authorization`, check PostgreSQL write mode and database storage before changing passwords or OAuth code. Auth must be able to insert sessions and OAuth authorizations.
 
-## 5. Authentication provider
-
-Authentication → Sign In / Providers → Email
-
-- Email provider: ON
-- Allow new users to sign up: ON
-- Confirm email: ON
-
-## 6. Test order
-
-1. Open the GitHub Pages root URL.
-2. Create a test account.
-3. Confirm the email.
-4. Sign in on the website.
-5. The account page should show `Awaiting activation` until Xtream credentials are assigned.
-6. Open the Android TV app and request a QR sign-in.
-7. Scan the QR with a phone.
-8. Supabase should redirect to the GitHub `/oauth/consent/` page with `authorization_id=...`.
-9. Sign in and choose `Continue to TV`.
-10. TV should receive the OAuth authorization and sign in.
-11. Assign the user's real authorized Xtream account using the secure admin flow.
-12. Refresh the website status; it should show viewing access active when entitlement is active.
-
-## Security
-
-Never commit:
-
-- `service_role` / secret Supabase key
-- Supabase database password
-- Xtream username/password
-- reseller-panel credentials
-- signing keystore/private keys
-
-The included `sb_publishable_...` key and OAuth Client ID are browser/public-client values and are expected to be public.
+The provider-wide TMDb import is a maintenance operation and must not run continuously. `private.provider_content_identity` is the global identity cache; do not recreate a second full per-user TMDb cache.
